@@ -1,1 +1,2 @@
-https://github.com/adoptium/temurin${major}-binaries/releases/download/${code}/OpenJDK${major}U-jdk_${arch}_${os}_hotspot_${version}.tar.gz
+https://github.com/adoptium/temurin${major}-binaries/releases/download/${code}/OpenJDK${major}U-jdk_${arch}_${os}_hotspot_${version}.${ext}
+https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/${code}/OpenJDK${major}U-jdk_${arch}_${os}_hotspot_${version}.${ext}
