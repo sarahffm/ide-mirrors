@@ -1,0 +1,1 @@
+https://github.com/adoptium/temurin${major}-binaries/releases/download/${code}/OpenJDK${major}U-jdk_${arch}_${os}_hotspot_${version}.tar.gz

@@ -1,0 +1,2 @@
+http://mirrors.jenkins.io/war-stable/${version}/jenkins.war
+http://ftp-nyc.osuosl.org/pub/jenkins/war-stable/${version}/jenkins.war
