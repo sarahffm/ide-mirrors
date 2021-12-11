@@ -1,2 +1,2 @@
-https://ftp.osuosl.org/pub/eclipse/technology/epp/downloads/release/${version}/R/eclipse-${eclipse_edition_type}-${version}-R-${os}-${arch}.${ext}
-https://archive.eclipse.org/pub/eclipse/technology/epp/downloads/release/${version}/R/eclipse-${eclipse_edition_type}-${version}-R-${os}-${arch}.${ext}
+https://ftp.osuosl.org/pub/eclipse/technology/epp/downloads/release/${version}/R/eclipse-${code}-${version}-R-${os}-${arch}.${ext}
+https://archive.eclipse.org/pub/eclipse/technology/epp/downloads/release/${version}/R/eclipse-${code}-${version}-R-${os}-${arch}.${ext}
