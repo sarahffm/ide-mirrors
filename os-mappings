@@ -1,4 +1,3 @@
-cygwin=windows
-msys=windows
-darwin=mac
+windows=windows
+mac=mac
 *=linux
