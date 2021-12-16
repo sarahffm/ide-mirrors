@@ -1,0 +1,4 @@
+cygwin=windows
+msys=windows
+darwin=mac
+*=linux

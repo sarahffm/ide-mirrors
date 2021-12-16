@@ -1,0 +1,4 @@
+cygwin=win32
+msys=win32
+mac=macosx-cocoa
+*=linux-gtk

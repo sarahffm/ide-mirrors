@@ -1,0 +1,4 @@
+cygwin=win
+msys=win
+darwin=darwin
+*=linux
