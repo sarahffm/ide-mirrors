@@ -1,3 +1,3 @@
-https://ftp.snt.utwente.nl/pub/eclipse/technology/epp/downloads/release/${version}/R/eclipse-${edition}-${version}-R-${os}-${arch}.${ext}
+https://ftp.snt.utwente.nl/pub/software/eclipse/technology/epp/downloads/release/${version}/R/eclipse-${edition}-${version}-R-${os}-${arch}.${ext}
 https://archive.eclipse.org/technology/epp/downloads/release/${version}/R/eclipse-${edition}-${version}-R-${os}-${arch}.${ext}
 https://ftp.osuosl.org/pub/eclipse/technology/epp/downloads/release/${version}/R/eclipse-${edition}-${version}-R-${os}-${arch}.${ext}
