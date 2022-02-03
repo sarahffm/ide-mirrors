@@ -1,1 +1,1 @@
-https://desktop.docker.com/${os}/stable/${arch}/${code}.${ext}
+https://desktop.docker.com/${os}/main/${arch}/${code}.${ext}
