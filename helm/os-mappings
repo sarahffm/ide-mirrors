@@ -1,0 +1,3 @@
+windows=windows-amd64
+mac=darwin-amd64
+linux=linux-amd64
