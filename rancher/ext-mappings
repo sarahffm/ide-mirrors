@@ -1,0 +1,4 @@
+windows=exe
+mac=dmg
+*=zip
+
