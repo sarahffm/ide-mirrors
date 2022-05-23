@@ -1,0 +1,3 @@
+windows=AWSCLIV2
+mac=AWSCLIV2
+*=awscli-exe-linux-x86_64
