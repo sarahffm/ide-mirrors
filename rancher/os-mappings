@@ -1,3 +1,3 @@
-windows=Rancher.Desktop.Setup.
-mac=Rancher.Desktop-
-*=rancher-desktop-linux-v
+windows=Rancher.Desktop.Setup.${version}
+mac=Rancher.Desktop-${version}${arch}
+*=rancher-desktop-linux-v${version}
