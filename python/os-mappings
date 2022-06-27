@@ -1,0 +1,3 @@
+windows=-embed-win32
+mac=
+*=
