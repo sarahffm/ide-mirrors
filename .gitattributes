@@ -1,0 +1,2 @@
+# Set the default behavior, to convert line endings to LF on checkout.
+* text eol=lf
