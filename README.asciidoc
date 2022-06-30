@@ -1,0 +1,6 @@
+# IDE-Mirrors
+
+Tools have a download link, which is often dependent on the operating system.
+This repository (ide-mirrors) provides a collection of download URLs for the tools of https://github.com/devonfw/ide/[devonfw-ide].
+The separate repository allows a quick customization of the URLs.
+To create a mirror for a new tool, follow https://github.com/devonfw/ide/blob/master/documentation/devonfw-ide-contribution-getting-started.asciidoc#ide-mirrors[this guide].
