@@ -24,15 +24,16 @@ jobs:
       - name: Test IDE
         run: |
           pwd
+          ls
           # cd ./sarahffm/ide/test/scripts/src/main/resources/scripts
           # echo "First 60 lines of functions:"
           # head -n 60 functions
         
-      - name: Read & execute functions
-        run: |
-          source ./ide/scripts/src/main/resources/scripts/functions
-          doWarning "This test worked."
-          doTest
+      #- name: Read & execute functions
+        #run: |
+          #source ./ide/scripts/src/main/resources/scripts/functions
+          #doWarning "This test worked."
+          #doTest
       
       - name: Crawl versions
         # just for testing
