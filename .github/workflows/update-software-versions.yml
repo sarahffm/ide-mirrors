@@ -50,7 +50,7 @@ jobs:
         
       - name: Commit and push changes
         run: |
-          git status
           git add .
+          git status
           git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
-          git push https://$secrets.BUILD_USER:$secrets.GHA_TOKEN@github.com/sarahffm/ide-mirrors/tree/test.git
+          git push https://$secrets.BUILD_USER:$secrets.GHA_TOKEN@github.com/sarahffm/ide-mirrors.git
