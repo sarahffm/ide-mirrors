@@ -19,11 +19,11 @@ jobs:
           # repository & branch have to be changed in the final code!
           repository: sarahffm/ide
           ref: test
-          path: './ide'
+          # path: './ide'
         
       - name: Test IDE
         run: |
-          cd ./ide/scripts/src/main/resources/scripts
+          cd ./sarahffm/ide/test/scripts/src/main/resources/scripts
           echo "First 60 lines of functions:"
           head -n 60 functions
         
