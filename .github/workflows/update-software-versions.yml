@@ -1,0 +1,53 @@
+name: Update software versions
+
+on:
+  schedule:
+  - cron: "0 3 * * *"
+  
+  workflow_dispatch:
+
+jobs:
+  update_versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Checkout my IDE test branch
+        uses: actions/checkout@v3
+        with:
+          # repository & branch have to be changed in the final code!
+          repository: sarahffm/ide
+          ref: test
+          path: './ide'
+        
+      - name: Test IDE
+        run: |
+          cd ./ide/scripts/src/main/resources/scripts
+          echo "First 60 lines of functions:"
+          head -n 60 functions
+        
+      - name: Read & execute functions
+        run: |
+          source ./ide/scripts/src/main/resources/scripts/functions
+          doWarning "This test worked."
+          doTest
+      
+      - name: Crawl versions
+        # just for testing
+        run: curl -s https://api.github.com/repos/adoptium/temurin11-binaries/releases | awk -F "\"" '/tag_name/ {print $4}' | sort -r --version-sort > ./java/available_versions.tmp
+          
+      - name: Update available-versions file
+        # not checking for changes yet
+        run: mv ./mirrors/java/available_versions.tmp ./mirrors/java/available_versions
+        
+      - name: Setup git user
+        run: |
+          git config --global user.email ${{secrets.BUILD_USER_EMAIL}}
+          git config --global user.name ${{secrets.BUILD_USER}}
+        
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
+          git push
