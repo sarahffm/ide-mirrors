@@ -44,7 +44,7 @@ jobs:
         run: mv ./java/available_versions.tmp ./java/available_versions
         
       - name: Remove ide repo
-        run: git rm --cached ide
+        run: git rm --cached ./ide
         
       - name: Setup git user
         run: |
