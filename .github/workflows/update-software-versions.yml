@@ -39,7 +39,7 @@ jobs:
           
       - name: Update available-versions file
         # not checking for changes yet
-        run: mv ./mirrors/java/available_versions.tmp ./mirrors/java/available_versions
+        run: mv ./java/available_versions.tmp ./java/available_versions
         
       - name: Setup git user
         run: |
