@@ -23,7 +23,7 @@ jobs:
         
       - name: Test IDE
         run: |
-          pwd
+          echo $GITHUB_WORKSPACE
           ls
           # cd ./sarahffm/ide/test/scripts/src/main/resources/scripts
           # echo "First 60 lines of functions:"
