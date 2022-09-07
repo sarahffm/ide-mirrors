@@ -15,7 +15,10 @@ jobs:
       - uses: actions/checkout@v3
         
       - name: Get versions
-        run: ./github/get-versions
+        run: |
+          pwd
+          ls
+          ./github/get-versions
           
       #- name: Update available-versions file
         # not checking for changes yet
@@ -31,8 +34,5 @@ jobs:
           git add .
           git restore --staged .github/workflows/update-software-versions.yml
           git restore --staged ide
-          echo 
-          echo "Git status:"
-          git status
           git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
           git push https://$secrets.BUILD_USER:$secrets.GHA_TOKEN@github.com/sarahffm/ide-mirrors.git
