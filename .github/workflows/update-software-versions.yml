@@ -24,7 +24,6 @@ jobs:
         
       - name: Get versions
         run: |
-          source ./ide/scripts/src/main/resources/scripts/functions
           doWarning "This is a test."
           doDevonCommand test az
           
