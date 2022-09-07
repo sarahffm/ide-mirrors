@@ -14,16 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Checkout my IDE test branch
-        uses: actions/checkout@v3
-        with:
+      #- name: Checkout my IDE test branch
+       # uses: actions/checkout@v3
+        #with:
           # repository & branch have to be changed in the final code!
-          repository: sarahffm/ide
-          ref: test
-          path: './ide'
+         # repository: sarahffm/ide
+          #ref: test
+          #path: './ide'
         
       - name: Get versions
         run: |
+          source ./ide/scripts/src/main/resources/scripts/functions
           doWarning "This is a test."
           doDevonCommand test az
           
