@@ -26,7 +26,7 @@ jobs:
         run: |
           source ./ide/scripts/src/main/resources/scripts/functions
           doWarning "This is a test."
-          DEVON_IDE_HOME=/home/runner/work/ide-mirrors/ide-mirrors/
+          DEVON_IDE_HOME=/home/runner/work/ide-mirrors/ide-mirrors
           doDevonCommand test az
           
       #- name: Update available-versions file
