@@ -13,22 +13,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Checkout my IDE test branch
-        uses: actions/checkout@v3
-        with:
-          # repository & branch have to be changed in the final code!
-          repository: sarahffm/ide
-          ref: test
-          path: './ide'
         
       - name: Get versions
-        run: |
-          source ./ide/scripts/src/main/resources/scripts/functions
-          doWarning "This is a test."
-          DEVON_IDE_HOME=/home/runner/work/ide-mirrors/ide-mirrors
-          doListSoftwareVersions "az"
-          doWarning "test is done."
+        run: ./github/get-versions
           
       #- name: Update available-versions file
         # not checking for changes yet
