@@ -21,27 +21,18 @@ jobs:
           ref: test
           path: './ide'
         
-      - name: Test IDE
-        run: |
-          echo $GITHUB_WORKSPACE
-          ls
-          cd ./ide/scripts/src/main/resources/scripts
-          echo "First 60 lines of functions:"
-          head -n 60 functions
-        
-      - name: Read & execute functions
-        run: |
-          source ./ide/scripts/src/main/resources/scripts/functions
-          doWarning "This test worked."
-          doTest
+      - name: Read functions from IDE repo
+        run: source ./ide/scripts/src/main/resources/scripts/functions
       
-      - name: Crawl versions
-        # just for testing
-        run: curl -s https://api.github.com/repos/adoptium/temurin11-binaries/releases | awk -F "\"" '/tag_name/ {print $4}' | sort -r --version-sort > ./java/available_versions.tmp
+      - name: Test
+        run: doWarning "This is a test."
+        
+      - name: Get versions
+        run: doListSoftwareVersions "az"
           
-      - name: Update available-versions file
+      #- name: Update available-versions file
         # not checking for changes yet
-        run: mv ./java/available_versions.tmp ./java/available_versions
+        #run: mv ./java/available_versions.tmp ./java/available_versions
         
       - name: Setup git user
         run: |
@@ -51,15 +42,10 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
-          echo "### git status after add:"
-          git status
-          
           git restore --staged .github/workflows/update-software-versions.yml
           git restore --staged ide
-          echo "### git status after restore:"
+          echo 
+          echo "Git status:
           git status
-          
           git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
-          echo "### git status before push:"
-          git status
           git push https://$secrets.BUILD_USER:$secrets.GHA_TOKEN@github.com/sarahffm/ide-mirrors.git
