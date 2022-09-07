@@ -21,14 +21,11 @@ jobs:
           ref: test
           path: './ide'
         
-      - name: Read functions from IDE repo
-        run: source ./ide/scripts/src/main/resources/scripts/functions
-      
-      - name: Test
-        run: doWarning "This is a test."
-        
       - name: Get versions
-        run: doListSoftwareVersions "az"
+        run: |
+          source ./ide/scripts/src/main/resources/scripts/functions
+          doWarning "This is a test."
+          doListSoftwareVersions "az"
           
       #- name: Update available-versions file
         # not checking for changes yet
