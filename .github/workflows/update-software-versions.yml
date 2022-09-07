@@ -51,6 +51,15 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
+          echo "### git status after add:"
           git status
+          
+          git restore --staged .github/workflows/update-software-versions.yml
+          git restore --staged ide
+          echo "### git status after restore:"
+          git status
+          
           git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
+          echo "### git status before push:"
+          git status
           git push https://$secrets.BUILD_USER:$secrets.GHA_TOKEN@github.com/sarahffm/ide-mirrors.git
