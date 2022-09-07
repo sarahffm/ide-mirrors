@@ -1,8 +1,9 @@
 name: Update software versions
 
 on:
-  schedule:
-  - cron: "0 3 * * *"
+  #schedule:
+  #- cron: "0 3 * * *"
+  push:
   
   workflow_dispatch:
 
