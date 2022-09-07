@@ -28,6 +28,7 @@ jobs:
           doWarning "This is a test."
           DEVON_IDE_HOME=/home/runner/work/ide-mirrors/ide-mirrors
           doListSoftwareVersions "az"
+          doWarning "test is done."
           
       #- name: Update available-versions file
         # not checking for changes yet
