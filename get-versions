@@ -2,24 +2,21 @@
 
 # software="az"
 
-for software in */ ;
+for software in */;
 do
   software=${software::-1}
   versions_url="./${software}/versions-url"
   versions_url_op="./${software}/versions-url-op"
-
   subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
-  echo $subdir_count      # debug
 
   if [ "${subdir_count}" -eq 1 ]
   then
-    echo "No subdirectories for providers found."
-    # if [ "${versions_url_op}" == "github" ]
-    # then
-    #   curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
-    # else 
-    #   eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
-    # fi
+    if grep -q "api.github.com" "${versions-url}"
+    then
+      curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
+    else 
+      eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
+    fi
   else
     echo "Subdirectories for providers present."
   fi
