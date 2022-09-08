@@ -5,8 +5,8 @@ do
   if [ "${software}" = "oc/" ]
   then
     software=${software::-1}
-    versions_url="./${software}/versions-url"
-    versions_url_op="./${software}/versions-url-op"
+    versions_url=$(cat "./${software}/versions-url")
+    versions_url_op=$(cat "./${software}/versions-url-op")
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
 
     chmod +x ./${software}/*
