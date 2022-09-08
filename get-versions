@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
 
-# software="az"
-
 for software in */;
 do
-  software=${software::-1}
-  versions_url="./${software}/versions-url"
-  versions_url_op="./${software}/versions-url-op"
-  subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
-
-  if [ "${subdir_count}" -eq 1 ]
+  if [ "${software}" = "gradle/" ]
   then
-    if grep -q "api.github.com" "${versions-url}"
+    software=${software::-1}
+    versions_url="./${software}/versions-url"
+    versions_url_op="./${software}/versions-url-op"
+    subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
+
+    if [ "${subdir_count}" -eq 1 ]
     then
-      curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
-    else 
-      eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
+      if grep -q "api.github.com" "${versions-url}"
+      then
+        curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
+      else 
+        eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
+      fi
+    else
+      echo "Subdirectories for providers present."
     fi
-  else
-    echo "Subdirectories for providers present."
   fi
 done
