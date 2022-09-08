@@ -1,3 +1,5 @@
+echo "pwd: $(pwd)"
+
 software="az"
 
 if [ -f "../${software}/available_versions" ]
