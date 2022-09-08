@@ -15,8 +15,10 @@ do
     then
       if grep -s -q "https://api.github.com/repos" "${versions-url}"
       then
+        echo "github"   # debug
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
       else 
+        echo "Without github"   # debug
         eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
       fi
     else
@@ -24,7 +26,7 @@ do
       echo "Subdirectories for providers present."
     fi
     # debug
-    echo "Availabel versions:"
+    echo "Available versions:"
     cat "./${software}/available_versions"
   fi
 done
