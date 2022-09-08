@@ -2,30 +2,48 @@
 
 for software in */;
 do
-  if [ "${software}" = "oc/" ]
+  if [ "${software}" = "java/" ]
   then
     software=${software::-1}
-    versions_url=$(cat "./${software}/versions-url")
-    versions_url_op=$(cat "./${software}/versions-url-op")
+    echo "Software: $software"
+
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
 
     chmod +x ./${software}/*
 
     if [ "${subdir_count}" -eq 1 ]
     then
+      versions_url=$(cat "./${software}/versions-url")
+      versions_url_op=$(cat "./${software}/versions-url-op")
+
       if grep -s -q "api.github" "${versions-url}"
       then
         echo "github"   # debug
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
       else 
         echo "Without github"   # debug
-        # debug
-        echo "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions" 
         eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
       fi
+
     else
-      # TODO
-      echo "Subdirectories for providers present."
+      for subdir in ./${software}/*/;
+      do
+        subdir=$(basename "${subdir}")
+        echo "Provider: $subdir"
+        versions_url=$(cat "./${software}/${subdir}/versions-url")
+        versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
+
+        if grep -s -q "api.github" "${versions-url}"
+        then
+          echo "github"   # debug
+          curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r >> "./${software}/available_versions.tmp"
+        else 
+          echo "Without github"   # debug
+          eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available_versions.tmp"
+        fi
+        echo "======" >> "./${software}/available_versions.tmp"
+      done
+      mv "./${software}/available_versions.tmp" "./${software}/available_versions"
     fi
     # debug
     echo "Available versions:"
