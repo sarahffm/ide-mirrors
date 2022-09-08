@@ -1,13 +1,11 @@
-echo "The script is running..."   # debug
-
-local software="az"
+software="az"
 
 if [ -f "../${software}/available_versions" ]
 then
-  doEcho "Print available_versions:"        # debug
+  echo "Print available_versions:"        # debug
   cat "../${software}/available_versions"
 else
-  doEcho "Getting available versions..."    # debug
+  echo "Getting available versions..."    # debug
   versions_url=$(cat "../${software}/versions-url")
   versions_url_op=$(cat "../${software}/versions-url-op")
   if [ "${versions_url_op}" == "github" ]
