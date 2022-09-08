@@ -13,12 +13,14 @@ do
 
     if [ "${subdir_count}" -eq 1 ]
     then
-      if grep -s -q "https://api.github.com/repos" "${versions-url}"
+      if grep -s -q "api.github" "${versions-url}"
       then
         echo "github"   # debug
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
       else 
         echo "Without github"   # debug
+        # debug
+        echo "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions" 
         eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
       fi
     else
