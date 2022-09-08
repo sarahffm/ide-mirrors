@@ -1,20 +1,23 @@
-echo "pwd: $(pwd)"
+#!/usr/bin/env bash
 
 software="az"
+versions_url="./${software}/versions-url"
+versions_url_op="./${software}/versions-url-op"
+echo "$versions_url, $versions_url_op"
 
-if [ -f "./${software}/available_versions" ]
-then
-  echo "Print available_versions:"        # debug
-  cat "./${software}/available_versions"
-else
-  echo "Getting available versions..."    # debug
-  versions_url=$(cat "./${software}/versions-url")
-  versions_url_op=$(cat "./${software}/versions-url-op")
-  if [ "${versions_url_op}" == "github" ]
-  then
-    curl "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
-  else 
-    eval "curl "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
-  fi
-  cat "./${software}/available_versions"
-fi
+# for software in */ ;
+# do
+#   software=${software::-1}
+#   versions_url=$(cat "./${software}/versions-url")
+#   versions_url_op=$(cat "./${software}/versions-url-op")
+
+#   # TODO: check if there are subdirectories in ./<<software>>
+#   # if no:
+#   if [ "${versions_url_op}" == "github" ]
+#   then
+#     curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
+#   else 
+#     eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
+#   fi
+
+# if yes:
