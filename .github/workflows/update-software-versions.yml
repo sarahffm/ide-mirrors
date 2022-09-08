@@ -16,8 +16,7 @@ jobs:
         
       - name: Get versions
         run: |
-          git update-index --chmod=+x ./.github/get-versions
-          ./.github/get-versions
+          bash ./home/runner/work/ide-mirrors/ide-mirrors/.github/get-versions
           
       #- name: Update available-versions file
         # not checking for changes yet

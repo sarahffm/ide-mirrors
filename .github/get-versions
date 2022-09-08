@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "The script is running..."   # debug
 
 local software="az"
