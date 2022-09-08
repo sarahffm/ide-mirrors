@@ -15,9 +15,7 @@ jobs:
       - uses: actions/checkout@v3
         
       - name: Get versions
-        run: |
-          git update-index --chmod=+x ./.github/get-versions
-          ./.github/get-versions
+        run: ./get-versions
           
       #- name: Update available-versions file
         # not checking for changes yet
