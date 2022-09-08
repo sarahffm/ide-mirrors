@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "Script is running..."
+
 for software in */;
 do
   if [ "${software}" = "gradle/" ]
@@ -11,10 +13,13 @@ do
 
     if [ "${subdir_count}" -eq 1 ]
     then
+      echo "### 1"
       if grep -q "api.github.com" "${versions-url}"
       then
+      echo "### 2"
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
       else 
+        echo "### 3"
         eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
       fi
     else
