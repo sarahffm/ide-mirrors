@@ -2,7 +2,7 @@
 
 for software in */;
 do
-  if [ "${software}" = "oc/" ]
+  if [ "${software}" = "helm/" ]
   then
     software=${software::-1}
     versions_url="./${software}/versions-url"
