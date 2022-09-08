@@ -17,9 +17,8 @@ do
     if [ "${subdir_count}" -eq 1 ]
     then
       echo "### 1"
-      if grep -q "api.github.com" "${versions-url}"
+      if grep -s -q "https://api.github.com/repos" "${versions-url}"
       then
-      echo "### 2"
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
       else 
         echo "### 3"
@@ -28,5 +27,7 @@ do
     else
       echo "Subdirectories for providers present."
     fi
+    echo "Availabel versions:"
+    cat "./${software}/available_versions"
   fi
 done
