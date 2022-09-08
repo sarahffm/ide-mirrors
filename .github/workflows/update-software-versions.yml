@@ -16,7 +16,8 @@ jobs:
         
       - name: Get versions
         run: |
-          bash ./home/runner/work/ide-mirrors/ide-mirrors/.github/get-versions
+          cd /home/runner/work/ide-mirrors/ide-mirrors/
+          ls
           
       #- name: Update available-versions file
         # not checking for changes yet
