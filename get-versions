@@ -2,7 +2,7 @@
 
 for software in */;
 do
-  if [ "${software}" = "aws/" ]
+  if [ "${software}" = "maven/" ]
   then
     software=${software::-1}
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
@@ -38,6 +38,7 @@ do
       done
       mv "./${software}/available_versions.tmp" "./${software}/available_versions"
     fi
+    chmod -x ./${software}/*
     # debug
     echo "Available versions:"
     cat "./${software}/available_versions"
