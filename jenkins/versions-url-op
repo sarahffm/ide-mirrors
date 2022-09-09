@@ -1,1 +1,1 @@
-awk -F '<a href="[0.9.]*\/">|\/<' '{print $1}' | sed -n -e 's/^<a href="[0-9.]*\/">//p'
+awk -F '<a href="[0.9.]*\\/">|\\/<' '{print $1}' | sed -n -e 's/^<a href="[0-9.]*\/">//p'
