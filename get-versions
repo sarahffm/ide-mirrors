@@ -2,7 +2,7 @@
 
 for software in */;
 do
-  if [ "${software}" = "jenkins/" ]
+  if [ "${software}" = "maven/" ]
   then
     software=${software::-1}
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
