@@ -5,10 +5,7 @@ do
   if [ "${software}" = "java/" ]
   then
     software=${software::-1}
-    echo "Software: $software"
-
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
-
     chmod +x ./${software}/*
 
     if [ "${subdir_count}" -eq 1 ]
@@ -16,7 +13,7 @@ do
       versions_url=$(cat "./${software}/versions-url")
       versions_url_op=$(cat "./${software}/versions-url-op")
 
-      if grep -s -q "api.github" "${versions-url}"
+      if [[ "${versions_url}" == *"api.github"* ]]
       then
         echo "github"   # debug
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
@@ -24,16 +21,16 @@ do
         echo "Without github"   # debug
         eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
       fi
-
     else
       for subdir in ./${software}/*/;
       do
         subdir=$(basename "${subdir}")
-        echo "Provider: $subdir"
         versions_url=$(cat "./${software}/${subdir}/versions-url")
         versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
 
-        if grep -s -q "api.github" "${versions-url}"
+        echo "${subdir}" >> "./${software}/available_versions.tmp"
+
+        if [[ "${versions_url}" == *"api.github"* ]]
         then
           echo "github"   # debug
           curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r >> "./${software}/available_versions.tmp"
