@@ -8,16 +8,16 @@ do
 
   if [ "${subdir_count}" -eq 1 ]
   then
-    versions_url=$(cat "./${software}/versions-url")
-    versions_url_op=$(cat "./${software}/versions-url-op")
-
     # temporary (remove when all files ready)
-    if [ -f "${versions_url}" ]
+    if [ -f "./${software}/versions-url" ]
     then
+      versions_url=$(cat "./${software}/versions-url")
+
       if [[ "${versions_url}" == *"api.github"* ]]
       then
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
       else
+        versions_url_op=$(cat "./${software}/versions-url-op")
         eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
       fi
     fi
@@ -26,14 +26,14 @@ do
     do
       subdir=$(basename "${subdir}")
       versions_url=$(cat "./${software}/${subdir}/versions-url")
-      versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
 
       echo "${subdir}" >> "./${software}/available_versions.tmp"
 
       if [[ "${versions_url}" == *"api.github"* ]]
       then
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r >> "./${software}/available_versions.tmp"
-      else 
+      else
+        versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
         eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available_versions.tmp"
       fi
       echo "======" >> "./${software}/available_versions.tmp"
