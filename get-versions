@@ -15,10 +15,8 @@ do
 
       if [[ "${versions_url}" == *"api.github"* ]]
       then
-        echo "github"   # debug
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
-      else 
-        echo "Without github"   # debug
+      else
         eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
       fi
     else
@@ -32,10 +30,8 @@ do
 
         if [[ "${versions_url}" == *"api.github"* ]]
         then
-          echo "github"   # debug
           curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r >> "./${software}/available_versions.tmp"
         else 
-          echo "Without github"   # debug
           eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available_versions.tmp"
         fi
         echo "======" >> "./${software}/available_versions.tmp"
