@@ -3,7 +3,7 @@
 for software in */;
 do
   # debug
-  if [ "${software}" == "vscode/" ]
+  if [ "${software}" == "python/" ]
   then
 
     software=${software::-1}
