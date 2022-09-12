@@ -1,0 +1,1 @@
+awk -F 'downloads\\/packages\\/release\\/[0-9]*-[0-9]*">' '{print $2}' | awk NF | sed -e "s/<\/a><\/li>//" | sort -r -u
