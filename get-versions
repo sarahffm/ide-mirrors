@@ -10,6 +10,10 @@ do
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
     chmod +x ./${software}/*
 
+    # debug
+    echo
+    echo "Software: ${software}"
+
     if [ "${subdir_count}" -eq 1 ]
     then
       # temporary (remove when all files ready)
@@ -19,10 +23,10 @@ do
 
         if [[ "${versions_url}" == *"api.github"* ]]
         then
-          curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions"
+          curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sort -V -r > "./${software}/available_versions.tmp"
         else
           versions_url_op=$(cat "./${software}/versions-url-op")
-          eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions"
+          eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available_versions.tmp"
         fi
       fi
     else
@@ -42,8 +46,20 @@ do
         fi
         echo "======" >> "./${software}/available_versions.tmp"
       done
-      mv "./${software}/available_versions.tmp" "./${software}/available_versions"
     fi
+
+    # debug
+    echo "Temp file:"
+    cat "./${software}/available_versions.tmp"
+
+    # update available_versions if curl was successful
+    if [ -s "./${software}/available_versions.tmp" ]
+    then
+      mv "./${software}/available_versions.tmp" "./${software}/available_versions"
+    else
+      rm "./${software}/available_versions.tmp"
+    fi
+
     # debug
     echo "Available versions:"
     cat "./${software}/available_versions"
