@@ -8,7 +8,6 @@ do
 
   software=${software::-1}
   subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
-  chmod -x ./${software}/*
 
   # debug
   echo
@@ -16,14 +15,14 @@ do
 
   if [ "${subdir_count}" -eq 1 ]
   then
-
-    chmod +x ./${software}/versions-url ./${software}/versions-url-op
+    chmod +x ./${software}/versions-url
     versions_url=$(cat "./${software}/versions-url")
 
     if [[ "${versions_url}" == *"api.github"* ]]
     then
       curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r > "./${software}/available-versions.tmp"
     else
+      chmod +x ./${software}/versions-url-op
       versions_url_op=$(cat "./${software}/versions-url-op")
       eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available-versions.tmp"
     fi
@@ -44,6 +43,7 @@ do
         versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
         eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
       fi
+
       echo "======" >> "./${software}/available-versions.tmp"
     done
   fi
