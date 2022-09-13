@@ -31,7 +31,7 @@ do
     for subdir in ./${software}/*/;
     do
       subdir=$(basename "${subdir}")
-      chmod +x ./${software}/${subdir}/versions-url ./${software}/${subdir}/versions-url-op
+      chmod +x ./${software}/${subdir}/versions-url
       versions_url=$(cat "./${software}/${subdir}/versions-url")
 
       echo "${subdir}" >> "./${software}/available-versions.tmp"
@@ -40,6 +40,7 @@ do
       then
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${software}/available-versions.tmp"
       else
+        chmod +x ./${software}/${subdir}/versions-url-op
         versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
         eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
       fi
