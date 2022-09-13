@@ -8,7 +8,7 @@ do
 
   software=${software::-1}
   subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
-  chmod +x ./${software}/*
+  #chmod +x ./${software}/*
 
   # debug
   echo
