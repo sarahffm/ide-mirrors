@@ -12,21 +12,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        
-      - name: Get versions
+      
+      - name: Test
         run: |
-          sudo chmod +x ./get-versions
-          ./get-versions
+          echo "ORG=$(echo '${{ github.repository }}' | awk -F '/' '{print $1}')" >> $GITHUB_ENV
+          echo "REPO_SOURCE=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+          echo "org: ${ORG}, repo: ${REPO_SOURCE}"
+        
+      #- name: Get versions
+        #run: |
+          #sudo chmod +x ./get-versions
+          #./get-versions
         
       - name: Setup git user
         run: |
           git config --global user.email ${{secrets.BUILD_USER_EMAIL}}
           git config --global user.name ${{secrets.BUILD_USER}}
         
-      - name: Commit and push changes
-        run: |
-          git add .
-          git restore --staged .github/workflows/update-software-versions.yml
-          git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
+      #- name: Commit and push changes
+        #run: |
+          #git add .
+          #git restore --staged .github/workflows/update-software-versions.yml
+          #git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
           # change repo for PR
-          git push https://$secrets.BUILD_USER:$secrets.GHA_TOKEN@github.com/sarahffm/ide-mirrors.git
+          #git push https://$secrets.BUILD_USER:$secrets.GHA_TOKEN@github.com/sarahffm/ide-mirrors.git
