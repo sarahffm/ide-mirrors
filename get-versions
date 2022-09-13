@@ -17,7 +17,7 @@ do
   if [ "${subdir_count}" -eq 1 ]
   then
 
-    chmod +x ./${software}/versions_url ./${software}/versions_url_op
+    chmod +x ./${software}/versions-url ./${software}/versions-url-op
     versions_url=$(cat "./${software}/versions-url")
 
     if [[ "${versions_url}" == *"api.github"* ]]
@@ -32,7 +32,7 @@ do
     for subdir in ./${software}/*/;
     do
       subdir=$(basename "${subdir}")
-      chmod +x ./${software}/${subdir}/versions_url ./${software}/${subdir}/versions_url_op
+      chmod +x ./${software}/${subdir}/versions-url ./${software}/${subdir}/versions-url-op
       versions_url=$(cat "./${software}/${subdir}/versions-url")
 
       echo "${subdir}" >> "./${software}/available-versions.tmp"
