@@ -1,8 +1,9 @@
-name: Update available versions
+name: Update software versions
 
 on:
   schedule:
   - cron: "0 3 * * *"
+  #push:
   
   workflow_dispatch:
 
@@ -17,6 +18,10 @@ jobs:
         run: |
           sudo chmod +x ./get-versions
           ./get-versions
+          
+      #- name: Update available-versions file
+        # not checking for changes yet
+        #run: mv ./java/available_versions.tmp ./java/available_versions
         
       - name: Setup git user
         run: |
@@ -27,6 +32,5 @@ jobs:
         run: |
           git add .
           git restore --staged .github/workflows/update-software-versions.yml
-          git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes."
-          # change git repo for PR
+          git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
           git push https://$secrets.BUILD_USER:$secrets.GHA_TOKEN@github.com/sarahffm/ide-mirrors.git
