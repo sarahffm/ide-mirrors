@@ -2,59 +2,65 @@
 
 for software in */;
 do
-  software=${software::-1}
-  subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
-
   # debug
-  echo
-  echo "Software: ${software}"
-
-  if [ "${subdir_count}" -eq 1 ]
+  if [ "${software}" == "npm/" ]
   then
-    chmod +x ./${software}/versions-url
-    versions_url=$(cat "./${software}/versions-url")
+    software=${software::-1}
+    subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
 
-    if [[ "${versions_url}" == *"api.github"* ]]
+    # debug
+    echo
+    echo "Software: ${software}"
+
+    if [ "${subdir_count}" -eq 1 ]
     then
-      curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r > "./${software}/available-versions.tmp"
-    else
-      chmod +x ./${software}/versions-url-op
-      versions_url_op=$(cat "./${software}/versions-url-op")
-      eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available-versions.tmp"
-    fi
-    
-  else
-    for subdir in ./${software}/*/;
-    do
-      subdir=$(basename "${subdir}")
-      chmod +x ./${software}/${subdir}/versions-url
-      versions_url=$(cat "./${software}/${subdir}/versions-url")
-
-      echo "${subdir}" >> "./${software}/available-versions.tmp"
+      chmod +x ./${software}/versions-url
+      versions_url=$(cat "./${software}/versions-url")
 
       if [[ "${versions_url}" == *"api.github"* ]]
       then
-        curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${software}/available-versions.tmp"
+        curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r > "./${software}/available-versions.tmp"
       else
-        chmod +x ./${software}/${subdir}/versions-url-op
-        versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
-        eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+        chmod +x ./${software}/versions-url-op
+        versions_url_op=$(cat "./${software}/versions-url-op")
+        eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available-versions.tmp"
       fi
+      
+    else
+      for subdir in ./${software}/*/;
+      do
+        subdir=$(basename "${subdir}")
+        chmod +x ./${software}/${subdir}/versions-url
+        versions_url=$(cat "./${software}/${subdir}/versions-url")
 
-      echo "======" >> "./${software}/available-versions.tmp"
-    done
-  fi
+        echo "${subdir}" >> "./${software}/available-versions.tmp"
 
-  # update available-versions if curl was successful
-  if [ -s "./${software}/available-versions.tmp" ]
-  then
-    mv "./${software}/available-versions.tmp" "./${software}/available-versions"
-  else
-    rm "./${software}/available-versions.tmp"
-    echo "Crawling versions for ${software} failed. available-versions has not been updated."
-  fi
+        if [[ "${versions_url}" == *"api.github"* ]]
+        then
+          curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${software}/available-versions.tmp"
+        else
+          chmod +x ./${software}/${subdir}/versions-url-op
+          versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
+          eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+        fi
 
+        echo "======" >> "./${software}/available-versions.tmp"
+      done
+    fi
+
+    # update available-versions if curl was successful
+    if [ -s "./${software}/available-versions.tmp" ]
+    then
+      mv "./${software}/available-versions.tmp" "./${software}/available-versions"
+    else
+      rm "./${software}/available-versions.tmp"
+      echo "Crawling versions for ${software} failed. available-versions has not been updated."
+    fi
+
+    # debug
+    echo "Available versions:"
+    cat "./${software}/available-versions"
+  
   # debug
-  echo "Available versions:"
-  head "./${software}/available-versions"
+  fi
 done
