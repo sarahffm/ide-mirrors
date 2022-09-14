@@ -12,9 +12,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Checkout IDE
+        uses: actions/checkout@v3
+        with:
+          repository: sarahffm/ide
+          path: './ide'
         
       - name: Get versions
         run: |
+          source ./ide/scripts/src/main/resources/scripts/functions
+          doWarning "Can access IDE functions."
           sudo chmod +x ./get-versions
           ./get-versions
         
@@ -26,6 +34,9 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
+          git status
+          git restore --staged ide
           git restore --staged .github/workflows/update-software-versions.yml
+          git status
           git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
           git push
