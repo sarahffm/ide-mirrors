@@ -1,1 +1,1 @@
-github
+awk -F "\"" '/tag_name/ {print $4}' | sed '/_openj*/d' | sed 's/jdk-//;s/+/_/;' | sort -V -r

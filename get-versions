@@ -3,7 +3,7 @@
 for software in */;
 do
   # debug
-  if [ "${software}" == "npm/" ]
+  if [ "${software}" == "helm/" ]
   then
     software=${software::-1}
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
@@ -17,7 +17,7 @@ do
       chmod +x ./${software}/versions-url
       versions_url=$(cat "./${software}/versions-url")
 
-      if [[ "${versions_url}" == *"api.github"* ]]
+      if [ ! -f "./${software}/versions-url-op" ]
       then
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r > "./${software}/available-versions.tmp"
       else
@@ -35,7 +35,7 @@ do
 
         echo "${subdir}" >> "./${software}/available-versions.tmp"
 
-        if [[ "${versions_url}" == *"api.github"* ]]
+        if [ ! -f "./${software}/${subdir}/versions-url-op" ]
         then
           curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${software}/available-versions.tmp"
         else
@@ -43,8 +43,6 @@ do
           versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
           eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
         fi
-
-        echo "======" >> "./${software}/available-versions.tmp"
       done
     fi
 
