@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+version_filter='/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d'
+
 for software in */;
 do
   # debug
@@ -19,7 +21,7 @@ do
 
       if [ ! -f "./${software}/versions-url-op" ]
       then
-        curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r > "./${software}/available-versions.tmp"
+        curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r > "./${software}/available-versions.tmp"
       else
         chmod +x ./${software}/versions-url-op
         versions_url_op=$(cat "./${software}/versions-url-op")
@@ -33,15 +35,40 @@ do
         chmod +x ./${software}/${subdir}/versions-url
         versions_url=$(cat "./${software}/${subdir}/versions-url")
 
+        # debug
         echo "${subdir}" >> "./${software}/available-versions.tmp"
 
-        if [ ! -f "./${software}/${subdir}/versions-url-op" ]
+        if [[ "${versions_url//$/\\$}" == *"major"* ]]
         then
-          curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${software}/available-versions.tmp"
+          # debug
+          echo "major in URL."
+          for major in {16..16};  # debug: 8..20
+          do
+            versions_url="${versions_url//\$\{major\}/${major}}"
+
+            if [ ! -f "./${software}/${subdir}/versions-url-op" ]
+            then
+              curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r >> "./${software}/available-versions.tmp"
+            else
+              chmod +x ./${software}/${subdir}/versions-url-op
+              versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
+              # final should be with -s option
+              eval "curl "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+            fi
+
+            versions_url=$(cat "./${software}/${subdir}/versions-url")
+          done
         else
-          chmod +x ./${software}/${subdir}/versions-url-op
-          versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
-          eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+          # debug
+          echo "No major in URL."
+          if [ ! -f "./${software}/${subdir}/versions-url-op" ]
+          then
+            curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r >> "./${software}/available-versions.tmp"
+          else
+            chmod +x ./${software}/${subdir}/versions-url-op
+            versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
+            eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+          fi
         fi
       done
     fi
