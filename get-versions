@@ -35,10 +35,10 @@ do
         chmod +x ./${software}/${subdir}/versions-url
         versions_url=$(cat "./${software}/${subdir}/versions-url")
 
-        if [[ "${versions_url//$/\\$}" == *"major"* ]]
+        if [[ "${versions_url//$/\\$}" == *"\${major}"* ]]
         then
           # debug: should be 8-20 for Java
-          versions_url="${versions_url//\$\{major\}/[8-10]}"
+          versions_url="${versions_url//\$\{major\}/[9-11]}"
         fi
 
         if [ ! -f "./${software}/${subdir}/versions-url-op" ]
