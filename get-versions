@@ -48,7 +48,7 @@ do
         chmod +x ./${software}/${subdir}/versions-url-op
         versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
         # debug: removed -s option
-        eval "curl "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+        eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
       fi
 
     done
