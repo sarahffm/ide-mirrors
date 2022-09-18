@@ -5,75 +5,78 @@ version_filter='/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d'
 for software in */;
 do
   # debug
-  #if [ "${software}" == "java/" ]
-  #then
-  software=${software::-1}
-  subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
-
-  # debug
-  echo
-  echo "Software: ${software}"
-
-  if [ "${subdir_count}" -eq 1 ]
+  if [ "${software}" == "az/" ]
   then
-    chmod +x ./${software}/versions-url
-    versions_url=$(cat "./${software}/versions-url")
+    software=${software::-1}
+    subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
 
-    if [ ! -f "./${software}/versions-url-op" ]
+    # debug
+    echo
+    echo "Software: ${software}"
+
+    if [ "${subdir_count}" -eq 1 ]
     then
-      curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r > "./${software}/available-versions.tmp"
-    else
-      chmod +x ./${software}/versions-url-op
-      versions_url_op=$(cat "./${software}/versions-url-op")
-      eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available-versions.tmp"
-    fi
-    
-  else
-    for subdir in ./${software}/*/;
-    do
-      subdir=$(basename "${subdir}")
-      chmod +x ./${software}/${subdir}/versions-url
-      versions_url=$(cat "./${software}/${subdir}/versions-url")
+      chmod +x ./${software}/versions-url
+      versions_url=$(cat "./${software}/versions-url")
 
-      if [[ "${versions_url//$/\\$}" == *"\${major}"* ]]
+      if [ ! -f "./${software}/versions-url-op" ]
       then
-        # debug: should be 8-20 for Java
-        versions_url="${versions_url//\$\{major\}/[9-20]}"
-      fi
-
-      if [ ! -f "./${software}/${subdir}/versions-url-op" ]
-      then
-        curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r >> "./${software}/available-versions.tmp"
+        curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r > "./${software}/available-versions.tmp"
       else
-        chmod +x ./${software}/${subdir}/versions-url-op
-        versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
-        # debug: removed -s option
-        eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+        chmod +x ./${software}/versions-url-op
+        versions_url_op=$(cat "./${software}/versions-url-op")
+        eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available-versions.tmp"
       fi
+      
+    else
+      for subdir in ./${software}/*/;
+      do
+        subdir=$(basename "${subdir}")
+        chmod +x ./${software}/${subdir}/versions-url
+        versions_url=$(cat "./${software}/${subdir}/versions-url")
 
-    done
-  fi
+        if [[ "${versions_url//$/\\$}" == *"\${major}"* ]]
+        then
+          # debug: should be 8-20 for Java
+          versions_url="${versions_url//\$\{major\}/[9-20]}"
+        fi
 
-  # workaround to sort java versions
-  if [ "${software}" == "java" ]
-  then
-    # temporarily converts versions to a format that can be sorted easily (e.g. 11.0.9_11 -> 11.0.9.0.0.11)
-    sed 's/_/\.0\.0./' "./${software}/available-versions.tmp" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr -k 5,5nr -k 6,6nr -k 7,7nr | sed 's/\.0\.0./_/' > "./${software}/available-versions.tmp"
-  fi
+        if [ ! -f "./${software}/${subdir}/versions-url-op" ]
+        then
+          curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r >> "./${software}/available-versions.tmp"
+        else
+          chmod +x ./${software}/${subdir}/versions-url-op
+          versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
+          # debug: removed -s option
+          eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+        fi
 
-  # update available-versions if curl was successful
-  if [ -s "./${software}/available-versions.tmp" ]
-  then
-    mv "./${software}/available-versions.tmp" "./${software}/available-versions"
-  else
-    rm "./${software}/available-versions.tmp"
-    echo "Crawling versions for ${software} failed. available-versions has not been updated."
-  fi
+      done
+    fi
 
-  # debug
-  echo "Available versions:"
-  cat "./${software}/available-versions"
+    # sort merged versions
+    if [ "${software}" == "java" ]
+    then
+      # workaround for Java:
+      # temporarily convert versions to a format that can be sorted easily (e.g. 11.0.9_11 -> 11.0.9.0.0.11)
+      sed 's/_/\.0\.0./' "./${software}/available-versions.tmp" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr -k 5,5nr -k 6,6nr -k 7,7nr | sed 's/\.0\.0./_/' > "./${software}/available-versions.tmp"
+    else
+      sort -V -r -o "./${software}/available-versions.tmp" "./${software}/available-versions.tmp"
+    fi
+
+    # update available-versions if curl was successful
+    if [ -s "./${software}/available-versions.tmp" ]
+    then
+      mv "./${software}/available-versions.tmp" "./${software}/available-versions"
+    else
+      rm "./${software}/available-versions.tmp"
+      echo "Crawling versions for ${software} failed. available-versions has not been updated."
+    fi
+
+    # debug
+    echo "Available versions:"
+    cat "./${software}/available-versions"
     
   # debug
-  #fi
+  fi
 done
