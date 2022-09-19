@@ -16,14 +16,16 @@ do
 
     if [ "${subdir_count}" -eq 1 ]
     then
-      chmod +x ./${software}/versions-url
+      chmod -x ./${software}/versions-url
+      echo "changed"
+      git update-index --chmod=+x ./${software}/versions-url
       versions_url=$(cat "./${software}/versions-url")
 
       if [ ! -f "./${software}/versions-url-op" ]
       then
         curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r > "./${software}/available-versions.tmp"
       else
-        chmod +x ./${software}/versions-url-op
+        git update-index --chmod=+x ./${software}/versions-url-op
         versions_url_op=$(cat "./${software}/versions-url-op")
         eval "curl -s "${versions_url}" | "${versions_url_op}"" > "./${software}/available-versions.tmp"
       fi
@@ -32,7 +34,7 @@ do
       for subdir in ./${software}/*/;
       do
         subdir=$(basename "${subdir}")
-        chmod +x ./${software}/${subdir}/versions-url
+        git update-index --chmod=+x ./${software}/${subdir}/versions-url
         versions_url=$(cat "./${software}/${subdir}/versions-url")
 
         if [[ "${versions_url//$/\\$}" == *"\${major}"* ]]
@@ -45,10 +47,10 @@ do
         then
           curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed "${version_filter}" | sort -V -r >> "./${software}/available-versions.tmp"
         else
-          chmod +x ./${software}/${subdir}/versions-url-op
+          git update-index --chmod=+x ./${software}/${subdir}/versions-url-op
           versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
           # debug: removed -s option
-          eval "curl "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+          eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
         fi
 
       done
@@ -75,7 +77,7 @@ do
 
     # debug
     echo "Available versions:"
-    cat "./${software}/available-versions"
+    head "./${software}/available-versions"
     
   # debug
   fi
