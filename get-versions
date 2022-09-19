@@ -5,7 +5,7 @@ version_filter='/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d'
 for software in */;
 do
   # debug
-  if [ "${software}" == "graalvm/" ]
+  if [ "${software}" == "docker/" ]
   then
     software=${software::-1}
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
@@ -38,7 +38,7 @@ do
         if [[ "${versions_url//$/\\$}" == *"\${major}"* ]]
         then
           # debug: should be 8-20 for Java
-          versions_url="${versions_url//\$\{major\}/[9-20]}"
+          versions_url="${versions_url//\$\{major\}/[9-18]}"
         fi
 
         if [ ! -f "./${software}/${subdir}/versions-url-op" ]
@@ -48,7 +48,7 @@ do
           chmod +x ./${software}/${subdir}/versions-url-op
           versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
           # debug: removed -s option
-          eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
+          eval "curl "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
         fi
 
       done
