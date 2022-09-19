@@ -5,7 +5,7 @@ version_filter='/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d'
 for software in */;
 do
   # debug
-  if [ "${software}" == "dotnet/" ]
+  if [ "${software}" == "graalvm/" ]
   then
     software=${software::-1}
     subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
