@@ -15,7 +15,8 @@ jobs:
         
       - name: Get versions
         run: |
-          sudo chmod +x ./get-versions
+          sudo chmod -x ./get-versions
+          git update-index --chmod=+x ./get-versions
           ./get-versions
         
       - name: Setup git user
@@ -26,7 +27,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
-          git restore --staged .github/workflows/update-software-versions.yml
+          # git restore --staged .github/workflows/update-software-versions.yml
           git status
           git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
           git push
