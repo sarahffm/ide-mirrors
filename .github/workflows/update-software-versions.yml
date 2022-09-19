@@ -15,7 +15,6 @@ jobs:
         
       - name: Get versions
         run: |
-          sudo chmod -x ./get-versions
           git update-index --chmod=+x ./get-versions
           ./get-versions
         
