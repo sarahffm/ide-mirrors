@@ -16,8 +16,6 @@ do
 
     if [ "${subdir_count}" -eq 1 ]
     then
-      chmod -x ./${software}/versions-url
-      echo "changed"
       git update-index --chmod=+x ./${software}/versions-url
       versions_url=$(cat "./${software}/versions-url")
 
@@ -39,8 +37,8 @@ do
 
         if [[ "${versions_url//$/\\$}" == *"\${major}"* ]]
         then
-          # debug: should be 8-20 for Java
-          versions_url="${versions_url//\$\{major\}/[9-18]}"
+          # range of major versions for Java
+          versions_url="${versions_url//\$\{major\}/[8-18]}"
         fi
 
         if [ ! -f "./${software}/${subdir}/versions-url-op" ]
@@ -49,7 +47,6 @@ do
         else
           git update-index --chmod=+x ./${software}/${subdir}/versions-url-op
           versions_url_op=$(cat "./${software}/${subdir}/versions-url-op")
-          # debug: removed -s option
           eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${software}/available-versions.tmp"
         fi
 
