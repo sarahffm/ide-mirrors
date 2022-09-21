@@ -38,7 +38,7 @@ do
         if [[ "${versions_url//$/\\$}" == *"\${major}"* ]]
         then
           # range of major versions for Java
-          versions_url="${versions_url//\$\{major\}/[8-18]}"
+          versions_url="${versions_url//\$\{major\}/[8-17]}"
         fi
 
         if [ ! -f "./${software}/${subdir}/versions-url-op" ]
