@@ -1,0 +1,7 @@
+for software in */;
+do
+  if [ -f "./${software}available-versions" ]
+  then
+    rm "./${software}available-versions"
+  fi
+done
