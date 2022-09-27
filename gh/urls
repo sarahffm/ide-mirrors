@@ -1,0 +1,1 @@
+https://github.com/cli/cli/releases/download/v${version}/gh_${version}_${os}_${arch}.${ext}
