@@ -15,8 +15,8 @@ jobs:
         
       - name: Get versions
         run: |
-          git update-index --chmod=+x ./get-versions
-          ./get-versions
+          git update-index --chmod=+x ./get-versions2
+          ./get-versions2
         
       - name: Setup git user
         run: |
