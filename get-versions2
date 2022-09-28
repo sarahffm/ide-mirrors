@@ -12,7 +12,8 @@ function doCurlVersions() {
     curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${2}/available-versions.tmp"
   else
     versions_url_op=$(cat "${1}/versions-url-op")
-    eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${2}/available-versions.tmp"
+    # debug remove -s option
+    eval "curl "${versions_url}" | "${versions_url_op}"" >> "./${2}/available-versions.tmp"
   fi
 }
 
