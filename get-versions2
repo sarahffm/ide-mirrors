@@ -34,7 +34,7 @@ do
 
     if [ "${software}" == "java" ]
     then
-      # Java workaround: convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort it, and convert it back
+      # Java workaround: convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort them, and convert them back
       sed -i 's/_/\.0\.0./' "${temp_path}" && sort -V -r -o "${temp_path}" "${temp_path}" && sed -i 's/\.0\.0./_/' "${temp_path}"
     else
       sort -V -r -o "${temp_path}" "${temp_path}"
