@@ -50,7 +50,7 @@ do
       cat "./${software}/available-versions.tmp"
       # workaround to sort Java versions:
       # temporarily convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort it, and convert it back
-      sed 's/_/\.0\.0./' "./${software}/available-versions.tmp" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr -k 5,5nr -k 6,6nr -k 7,7nr | sed 's/\.0\.0./_/' > "./${software}/available-versions.tmp"
+      sed 's/_/\.0\.0./' "./${software}/available-versions.tmp" | sort -V -r | sed 's/\.0\.0./_/' > "./${software}/available-versions.tmp"
       # debug
       echo "After sorting:"
       cat "./${software}/available-versions.tmp"
