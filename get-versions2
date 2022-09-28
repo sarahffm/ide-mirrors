@@ -31,14 +31,14 @@ do
       subdir=$(basename "${subdir}")
       doCurlVersions "./${software}/${subdir}" "${software}"
     done
-  fi
 
-  if [ "${software}" == "java" ]
-  then
-    # Java workaround: convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort it, and convert it back
-    sed -i 's/_/\.0\.0./' "${temp_path}" && sort -V -r -o "${temp_path}" "${temp_path}" && sed -i 's/\.0\.0./_/' "${temp_path}"
-  else
-    sort -V -r -o "${temp_path}" "${temp_path}"
+    if [ "${software}" == "java" ]
+    then
+      # Java workaround: convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort it, and convert it back
+      sed -i 's/_/\.0\.0./' "${temp_path}" && sort -V -r -o "${temp_path}" "${temp_path}" && sed -i 's/\.0\.0./_/' "${temp_path}"
+    else
+      sort -V -r -o "${temp_path}" "${temp_path}"
+    fi
   fi
 
   # update available-versions if curl was successful
