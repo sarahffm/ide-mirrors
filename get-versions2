@@ -3,7 +3,6 @@
 # $1: path to the software or provider directory
 # $2: software name
 function doCurlVersions() {
-  git update-index --chmod=+x ${1}/versions-url
   versions_url=$(cat "${1}/versions-url")
   # range of major versions for Java
   versions_url="${versions_url//\$\{major\}/[8-17]}"
@@ -12,7 +11,6 @@ function doCurlVersions() {
   then
     curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${2}/available-versions.tmp"
   else
-    git update-index --chmod=+x ${1}/versions-url-op
     versions_url_op=$(cat "${1}/versions-url-op")
     eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${2}/available-versions.tmp"
   fi
@@ -21,48 +19,48 @@ function doCurlVersions() {
 for software in */;
 do
   # debug
-  #if [ "${software}" == "${1}/" ]
-  #then
-  software=${software::-1}
-  subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
+  if [ "${software}" == "java/" ]
+  then
+    software=${software::-1}
+    subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
+
+    # debug
+    echo
+    echo "Software: ${software}"
+
+    if [ "${subdir_count}" -eq 1 ]
+    then
+      doCurlVersions "./${software}" "${software}"
+    else
+      for subdir in ./${software}/*/;
+      do
+        subdir=$(basename "${subdir}")
+        doCurlVersions "./${software}/${subdir}" "${software}"
+      done
+    fi
+
+    if [ "${software}" == "java" ]
+    then
+      # workaround to sort Java versions:
+      # temporarily convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort it, and convert it back
+      sed 's/_/\.0\.0./' "./${software}/available-versions.tmp" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr -k 5,5nr -k 6,6nr -k 7,7nr | sed 's/\.0\.0./_/' > "./${software}/available-versions.tmp"
+    else
+      sort -V -r -o "./${software}/available-versions.tmp" "./${software}/available-versions.tmp"
+    fi
+
+    # update available-versions if curl was successful
+    if [[ ! -z $(grep '[^[:space:]]' "./${software}/available-versions.tmp") ]]
+    then
+      mv "./${software}/available-versions.tmp" "./${software}/available-versions"
+    else
+      rm "./${software}/available-versions.tmp"
+      echo "${software}: Crawling versions failed. 'available-versions' has not been updated."
+    fi
+
+    # debug
+    echo "Available versions:"
+    cat "./${software}/available-versions"
 
   # debug
-  echo
-  echo "Software: ${software}"
-
-  if [ "${subdir_count}" -eq 1 ]
-  then
-    doCurlVersions "./${software}" "${software}"
-  else
-    for subdir in ./${software}/*/;
-    do
-      subdir=$(basename "${subdir}")
-      doCurlVersions "./${software}/${subdir}" "${software}"
-    done
   fi
-
-  if [ "${software}" == "java" ]
-  then
-    # workaround to sort Java versions:
-    # temporarily convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort it, and convert it back
-    sed 's/_/\.0\.0./' "./${software}/available-versions.tmp" | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr -k 5,5nr -k 6,6nr -k 7,7nr | sed 's/\.0\.0./_/' > "./${software}/available-versions.tmp"
-  else
-    sort -V -r -o "./${software}/available-versions.tmp" "./${software}/available-versions.tmp"
-  fi
-
-  # update available-versions if curl was successful
-  if [[ ! -z $(grep '[^[:space:]]' "./${software}/available-versions.tmp") ]]
-  then
-    mv "./${software}/available-versions.tmp" "./${software}/available-versions"
-  else
-    rm "./${software}/available-versions.tmp"
-    echo "${software}: Crawling versions failed. 'available-versions' has not been updated."
-  fi
-
-  # debug
-  echo "Available versions:"
-  cat "./${software}/available-versions"
-
-  # debug
-  #fi
 done
