@@ -1,4 +1,4 @@
-name: Update software versions
+name: Update available versions
 
 on:
   schedule:
@@ -14,9 +14,8 @@ jobs:
       - uses: actions/checkout@v3
         
       - name: Get versions
-        run: |
-          git ls-tree HEAD
-          ./get-versions2
+        # debug: change file name
+        run: ./get-versions2
         
       - name: Setup git user
         run: |
