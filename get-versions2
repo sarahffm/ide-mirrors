@@ -5,8 +5,7 @@
 function doCurlVersions() {
   local versions_url=$(cat "${1}/versions-url")
   # range of major versions for Java
-  # debug changed range
-  versions_url="${versions_url//\$\{major\}/[8-11]}"
+  versions_url="${versions_url//\$\{major\}/[8-20]}"
 
   if [ ! -f "${1}/versions-url-op" ]
   then
@@ -19,16 +18,9 @@ function doCurlVersions() {
 
 for software in */;
 do
-  # debug
-  #if [ "${software}" == "java/" ]
-  #then
   software=${software::-1}
   subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
   temp_path="./${software}/available-versions.tmp"
-
-  # debug
-  echo
-  echo "Software: ${software}"
 
   if [ "${subdir_count}" -eq 1 ]
   then
@@ -57,11 +49,4 @@ do
     rm "${temp_path}"
     echo "${software}: Crawling versions failed. 'available-versions' has not been updated."
   fi
-
-  # debug
-  echo "Available versions:"
-  cat "./${software}/available-versions"
-
-  # debug
-  #fi
 done
