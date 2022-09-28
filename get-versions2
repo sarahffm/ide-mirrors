@@ -14,6 +14,10 @@ function doCurlVersions() {
     versions_url_op=$(cat "${1}/versions-url-op")
     # debug remove -s option
     eval "curl "${versions_url}" | "${versions_url_op}"" >> "./${2}/available-versions.tmp"
+    echo "url: $versions_url"
+    echo "op: $versions_url_op"
+    echo "Temp versions:"
+    cat "./${2}/available-versions.tmp"
   fi
 }
 
