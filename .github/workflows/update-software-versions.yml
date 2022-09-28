@@ -25,7 +25,5 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
-          # git restore --staged .github/workflows/update-software-versions.yml
-          git status
           git commit -m "Update available versions | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER" || echo "No changes to commit."
           git push
