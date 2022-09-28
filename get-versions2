@@ -48,7 +48,7 @@ do
       echo "Before sorting:"
       cat "${temp_path}"
 
-      sed -i 's/_/\.0\.0./' "${temp_path}" && sort -V -r -o "${temp_path}" && sed -i 's/\.0\.0./_/' "${temp_path}"
+      sed -i 's/_/\.0\.0./' "${temp_path}" && sort -V -r -o "${temp_path}" "${temp_path}" && sed -i 's/\.0\.0./_/' "${temp_path}"
 
       # Java workaround: convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort it, and convert it back
       # sed 's/_/\.0\.0./' "./${software}/available-versions.tmp" | sort -V -r | sed 's/\.0\.0./_/' > "./${software}/available-versions1.tmp"
