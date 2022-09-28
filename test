@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# replace with loop
+software="helm/"
+
+software=${software::-1}
+echo 
+echo "Software: ${software}" 
+
+versions_url="./${software}/available-versions"
+download_urls="./${software}/urls"
+
+while IFS="" read -r version
+do
+  echo "Version: ${version}"
+
+  while IFS="" read -r url
+  do
+    url=""
+    echo "URL: "
+  done < "${download_urls}"
+
+done < "${versions_url}"
