@@ -1,0 +1,1 @@
+awk -F "\"" '/tag_name/ {print $4}' | sed 's/v//' | sed '/-beta/d' | sort -V -r
