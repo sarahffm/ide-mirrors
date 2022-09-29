@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# $1: path to the software or provider directory
+# $2: software name
+function doCurlVersions() {
+  local versions_url=$(cat "${1}/versions-url")
+  # range of major versions for Java
+  versions_url="${versions_url//\$\{major\}/[8-20]}"
+
+  if [ ! -f "${1}/versions-url-op" ]
+  then
+    curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${2}/available-versions.tmp"
+  else
+    local versions_url_op=$(cat "${1}/versions-url-op")
+    eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${2}/available-versions.tmp"
+  fi
+}
+
+for software in */;
+do
+  software=${software::-1}
+  subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
+  temp_path="./${software}/available-versions.tmp"
+
+  if [ "${subdir_count}" -eq 1 ]
+  then
+    doCurlVersions "./${software}" "${software}"
+  else
+    for subdir in ./${software}/*/;
+    do
+      subdir=$(basename "${subdir}")
+      doCurlVersions "./${software}/${subdir}" "${software}"
+    done
+
+    if [ "${software}" == "java" ]
+    then
+      # Java workaround: convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort them, and convert them back
+      sed -i 's/_/\.0\.0./' "${temp_path}" && sort -V -r -o "${temp_path}" "${temp_path}" && sed -i 's/\.0\.0./_/' "${temp_path}"
+    else
+      sort -V -r -o "${temp_path}" "${temp_path}"
+    fi
+  fi
+
+  # update available-versions if curl was successful
+  if [[ ! -z $(grep '[^[:space:]]' "${temp_path}") ]]
+  then
+    mv "${temp_path}" "./${software}/available-versions"
+  else
+    rm "${temp_path}"
+    echo "${software}: Crawling versions failed. 'available-versions' has not been updated."
+  fi
+done
