@@ -1,0 +1,1 @@
+sed 's/}/\n/g' | grep '"name":"npm"' |  sed 's/.*"version":"//' | cut -f1 -d"\"" | sed '/{/d;/-pre.*/d;/-rc.*/d;/-beta.*/d;/-next.*/d;/-alpha.*/d' | sort -V -r
