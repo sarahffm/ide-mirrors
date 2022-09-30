@@ -1,0 +1,24 @@
+name: CI of ide-mirrors
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Detect CRLF line endings
+        id: detect
+        run: find . -type f | xargs file | grep CRLF && exit 1 || exit 0
+        continue-on-error: true
+      - name: Check if ext-mappings present in every subfolder
+        id: check
+        run: find . -maxdepth 1 -type d -not -path './.*'  -not -path '.' '!' -exec test -e "{}/ext-mappings" ';' -print | grep . && exit 1 || exit 0
+        continue-on-error: true
+      - name: Check on failures
+        if: ${{ steps.detect.outcome }} == 'failure' || ${{ steps.check.outcome }} == 'failure'
+        run: exit 1
+      - name: Success
+        if: ${{ steps.detect.outcome }} == 'success' && ${{ steps.check.outcome }} == 'success'
+        run: echo "Test succeeded!"; exit 0
