@@ -1,1 +1,1 @@
-awk -F "\"" '/tag_name/ {print $4}' | sed 's/jdk-//;s/+/_/;' | sed '/_openj/d;/\-/d;' | sort -V -r
+awk -F "\"" '/tag_name/ {print $4}' | sed 's/jdk-//;s/+/_/;' | sed '/_openj/d;/\-/d;'
