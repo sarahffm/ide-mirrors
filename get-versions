@@ -9,7 +9,7 @@ function doCurlVersions() {
 
   if [ ! -f "${1}/versions-url-op" ]
   then
-    curl -s "${versions_url}" | awk -F "\"" '/tag_name/ {print $4}' | sed '/-beta.*/d;/-alpha.*/d;/-rc.*/d;/-pre.*/d;/-preview.*/d' | sort -V -r >> "./${2}/available-versions.tmp"
+    curl -s "${versions_url}" | awk -F "git/refs/tags/" ' {print $2}' | awk -F "\"" '{print $1}' | awk NF | grep -i -Ev "cr|rc|beta|alpha|pre|preview|list|dev|unstable|test" | sort -V -r >> "./${2}/available-versions.tmp"
   else
     local versions_url_op=$(cat "${1}/versions-url-op")
     eval "curl -s "${versions_url}" | "${versions_url_op}"" >> "./${2}/available-versions.tmp"

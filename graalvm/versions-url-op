@@ -1,1 +1,1 @@
-awk -F "\"" '/tag_name/ {print $4}' | sed 's/vm\-//' | sed '/-pre.*/d' | sort -V -r
+awk -F "git/refs/tags/" ' {print $2}' | awk -F "\"" '{print $1}' | awk NF | sed 's/m//' | sed 's/v-//' |  grep -i -Ev "cr|rc|beta|alpha|pre|preview|ce" | sort -V -r
