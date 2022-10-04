@@ -1,0 +1,1 @@
+awk -F "git/refs/tags/" ' {print $2}' | awk -F "\"" '{print $1}' | awk NF | grep -i -Ev "test|pre" | sed 's/v//' | sort -V -r
