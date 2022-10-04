@@ -19,25 +19,26 @@ function doCurlVersions() {
 for software in */;
 do
   software=${software::-1}
-  subdir_count=$(find "./${software}" -maxdepth 1 -type d | wc -l)
   temp_path="./${software}/available-versions.tmp"
 
-  if [ "${subdir_count}" -eq 1 ]
+  if [ ! -f "./${software}/versions" ]
   then
     doCurlVersions "./${software}" "${software}"
   else
-    for subdir in ./${software}/*/;
+    while IFS='<' read -r folder rest
     do
-      subdir=$(basename "${subdir}")
-      doCurlVersions "./${software}/${subdir}" "${software}"
-    done
+      if [ "${folder}" != "." ]
+      then
+        doCurlVersions "./${software}/${folder}" "${software}"
+      fi
+    done < "./${software}/versions"
 
     if [ "${software}" == "java" ]
     then
       # Java workaround: convert versions to a different format (e.g. 11.0.9_11 -> 11.0.9.0.0.11), sort them, and convert them back
-      sed -i 's/_/\.0\.0./' "${temp_path}" && sort -V -r -o "${temp_path}" "${temp_path}" && sed -i 's/\.0\.0./_/' "${temp_path}"
+      sed -i 's/_/\.0\.0./' "${temp_path}" && sort -Vru -o "${temp_path}" "${temp_path}" && sed -i 's/\.0\.0./_/' "${temp_path}"
     else
-      sort -V -r -o "${temp_path}" "${temp_path}"
+      sort -Vru -o "${temp_path}" "${temp_path}"
     fi
   fi
 
