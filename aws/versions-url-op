@@ -1,1 +1,0 @@
-awk -F 'js-file-line\">' '{print $2}' | awk NF | sed '/^[0-9]\.[0-9]\.[0-9]/!d' | sed 's/<\/td>//'
